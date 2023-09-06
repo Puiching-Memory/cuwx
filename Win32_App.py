@@ -1,15 +1,19 @@
 '''
 应用层，处理事件/高级算法
+比起一般流程，需要多做什么工作？
+1.桥接
+2.事件绑定
+3.字体调整
 '''
-
 
 ##############################
 # import
 ##############################
+#桥接,载入GUI类
 import BridgeN
 st = BridgeN.Analyze(path = './GUI_Base.py')
 exec(st,globals())
-
+del st
 
 import wx,wx.xrc
 import cuwx
@@ -17,7 +21,6 @@ import win32mica
 import darkdetect
 import ctypes
 import os
-
 
 
 ##############################
@@ -65,6 +68,9 @@ class CalcFrame(Main,wx.Frame):
 		#刷新界面
 		self.Refresh_bysize()
 
+		#绑定事件
+		self.Bind(cuwx.EVT_BUTTON, self.OnLeftDown, self.ButtTOOL)
+
 	def MainOnSize(self, event):
 		event.Skip()
 		##print(self.GetSize())
@@ -73,6 +79,9 @@ class CalcFrame(Main,wx.Frame):
 		x,y = self.GetSize()
 		self.SetSize(x+1,y)
 		self.SetSize(x,y)
+
+	def OnLeftDown(self, event):
+		print(1)
 		
 ##############################
 # 主函数

@@ -37,7 +37,8 @@ def Analyze(path):
 	print('GUI有效行数:', len(data_Dec))
 	##print(data_Dec)
 
-	#针对Button行进行修改,wx.Button替换为cuwx.Button.but
+	#Step:针对Button行进行修改,wx.Button替换为cuwx.Button.but
+	#TODO:支持更多控件的替换
 	cun = 0
 	for i in data_Dec:
 		if 'Butt' in i and '=' in i:
@@ -52,7 +53,7 @@ def Analyze(path):
 
 	##print(data_Dec)
 
-	#合并字符串
+	#Step:合并字符串
 	a = ''
 	for i in data_Dec:
 		a = a + i

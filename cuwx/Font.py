@@ -3,7 +3,7 @@ import os
 import fnmatch
 
 # https://learn.microsoft.com/zh-cn/windows/win32/api/wingdi/nf-wingdi-addfontresourcew
-
+#TODO:载入字体后发送系统通知
 
 def Load(path):
 	gdi32 = ctypes.WinDLL("gdi32.dll")  # 调用此DLL载入字体
@@ -31,7 +31,4 @@ def find_files(directory, extension):
 	return file_paths
 
 if __name__ == "__main__":
-	directory = './cuwx/font'  # 请将此处替换为你的文件夹路径  
-	extensions = '.ttf'
-	find_files(directory,extensions)
 	pass
