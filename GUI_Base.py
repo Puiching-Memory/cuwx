@@ -20,19 +20,24 @@ class Main ( wx.Frame ):
 		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Win32GUI", pos = wx.DefaultPosition, size = wx.Size( 500,300 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.Size( 200,100 ), wx.DefaultSize )
+		self.SetBackgroundColour( wx.Colour( 0, 0, 0 ) )
 
 		SizerMain = wx.BoxSizer( wx.VERTICAL )
 
 		SizerTop = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.Butt1 = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, 0 )
-		SizerTop.Add( self.Butt1, 0, wx.ALL, 5 )
+		self.ButtTOOL = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
+		self.ButtTOOL.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
 
-		self.ButtTOOL = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, 0 )
 		SizerTop.Add( self.ButtTOOL, 0, wx.ALL, 5 )
 
 		self.ButtA = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, 0 )
 		SizerTop.Add( self.ButtA, 0, wx.ALL, 5 )
+
+		self.Butt6 = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
+		self.Butt6.SetFont( wx.Font( 9, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "楷体" ) )
+
+		SizerTop.Add( self.Butt6, 0, wx.ALL, 5 )
 
 
 		SizerMain.Add( SizerTop, 0, 0, 5 )
