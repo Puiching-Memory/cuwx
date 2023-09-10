@@ -45,6 +45,7 @@ class CalcFrame(Main, wx.Frame):
 
         # 查找字体路径
         directory = "./cuwx/font"
+        
         extensions = ".ttf"
         re = cuwx.Font.find_files(directory, extensions)
 

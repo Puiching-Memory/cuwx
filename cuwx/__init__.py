@@ -1,7 +1,8 @@
 import wx
 import win32api
 
-from .Button import *
+from .Button import ButtonN,EVT_BUTTON_PUSH,EVT_BUTTON_UP
+from .CheckBox import CheckBoxN,EVT_CHECKBOX_PUSH,EVT_CHECKBOX_UP
 from .Theme import *
 from .Font import *
 

@@ -1,16 +1,14 @@
 import wx
 import wx.lib.newevent
 import win32api
+from .Theme import get_windows_theme_color
 
 # 自定义事件
-button_cmd_event_push, EVT_BUTTON_PUSH = wx.lib.newevent.NewCommandEvent()  # 按下按钮事件
-button_cmd_event_up, EVT_BUTTON_UP = wx.lib.newevent.NewCommandEvent()  # 松开按钮事件
-
-# TODO:三阶贝塞尔动画
-# TODO:按钮内阴影
+button_cmd_event_push, EVT_CHECKBOX_PUSH = wx.lib.newevent.NewCommandEvent()  # 按下按钮事件
+button_cmd_event_up, EVT_CHECKBOX_UP = wx.lib.newevent.NewCommandEvent()  # 松开按钮事件
 
 
-class ButtonN(wx.Control):
+class CheckBoxN(wx.Control):
     def __init__(
         self,
         parent,
@@ -18,11 +16,10 @@ class ButtonN(wx.Control):
         label="",
         pos=wx.DefaultPosition,
         size=wx.DefaultSize,
-        style=wx.NO_BORDER,
-        *args,
-        **kwargs
+        style=wx.BORDER_NONE,
+        validator=wx.DefaultValidator,
     ):
-        wx.Control.__init__(self, parent, id, pos, size, wx.NO_BORDER, *args, **kwargs)
+        wx.Control.__init__(self, parent, id, pos, size, wx.BORDER_NONE, validator)
 
         self.parent = parent
 
@@ -37,15 +34,24 @@ class ButtonN(wx.Control):
         self.Last_time = 0.2  # 动画持续时间
         self.AL_Frames = 0  # 总帧数
 
+        self.IS_Checked = False  # 是否选中
+        self.IS_Show_Edge = False  # 是否显示边框
+
         # 动画计时器
         self.timer = wx.Timer()
         self.timer.SetOwner(self, wx.ID_ANY)
 
         # 设置默认颜色
-        self.SNBrushColour = wx.Colour(0, 0, 0)  # 刷子颜色，这通常会用于内填充
+        self.SNBrushColour = wx.Colour(25, 25, 25)  # 刷子颜色，这通常会用于内填充
         self.SNPenColour = wx.Colour(255, 208, 104)  # 笔颜色，这通常会用于描边
         self.UNBrushColour = [0, 0, 0]  # 用户刷子颜色,不使用wx.colour,因为精度不足,用于计算动画
         self.UNPenColour = [255, 208, 104]  # 用户笔颜色
+
+        # 从注册表获取主题色
+        r = get_windows_theme_color()[0]
+        g = get_windows_theme_color()[1]
+        b = get_windows_theme_color()[2]
+        self.ThemeColour = [r, g, b]  # 系统主题颜色
         self.UTBrushColour = [0, 0, 0]  # 目标刷子颜色
         self.UTPenColour = [255, 208, 104]  # 目标笔颜色
         self.SetForegroundColour(wx.Colour("white"))  # 字体颜色
@@ -60,7 +66,6 @@ class ButtonN(wx.Control):
         ##self.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeaveWindow)
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnterWindow)
-        self.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
         self.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
         self.Bind(wx.EVT_SIZE, self.OnSize)
 
@@ -78,19 +83,30 @@ class ButtonN(wx.Control):
 
         width, height = self.GetClientSize()  # 可绘制区大小
 
-
         dc.SetFont(self.GetFont())  # 设置字体
         label = self.GetLabel()  # 设置文本
         textWidth, textHeight = dc.GetTextExtent(label)  # 获取文本区大小
 
         dc.SetBrush(wx.Brush(self.SNBrushColour))
         dc.SetPen(wx.Pen(self.SNPenColour))
-        dc.DrawRoundedRectangle(0, 0, width, height, 4)  # 绘制圆角
+        ##dc.DrawRoundedRectangle(0, 0, width, height, 0) #绘制边框
+        dc.DrawRoundedRectangle(
+            int(width / 2 - textWidth / 2 - 3), int(height / 2 - 15), 30, 30, 4
+        )  # 绘制复选框
+        dc.DrawRoundedRectangle(
+            int(width / 2 - textWidth / 2 - 2), int(height / 2 - 14), 28, 28, 3
+        )
 
         # 计算以居中对齐
-        textXpos = width / 2 - textWidth / 2
+        textXpos = width / 2 - textWidth / 2 + 30 + 3
         textYpos = height / 2 - textHeight / 2
         dc.DrawText(label, int(textXpos), int(textYpos))  # 绘制文字
+
+        # 绘制图标
+        if self.IS_Checked == True:
+            dc.DrawText(
+                "✔", int(width / 2 - textWidth / 2), int(height / 2 - textHeight / 2)
+            )
 
     def EraseBackground(self, event):
         pass
@@ -100,43 +116,32 @@ class ButtonN(wx.Control):
         event.Skip()
 
     def OnLeftDown(self, event):
-        self.UTBrushColour = [70, 70, 70]
-        self.Last_time = 0.05
-        self.IS_First_Tick = True
-        self.Tick_Frame = 0
-        self.timer.Stop()
-        self.timer.Start(int(1000/self.FPS))
+        if self.IS_Checked == False:
+            self.IS_Checked = True
+            self.UTBrushColour = self.ThemeColour
+            self.Last_time = 0.05
+            self.IS_First_Tick = True
+            self.Tick_Frame = 0
+            self.timer.Stop()
+            self.timer.Start(int(1000 / self.FPS))
+        else:
+            self.IS_Checked = False
+            self.UTBrushColour = [45, 45, 45]
+            self.Last_time = 0.05
+            self.IS_First_Tick = True
+            self.Tick_Frame = 0
+            self.timer.Stop()
+            self.timer.Start(int(1000 / self.FPS))
         # 发送事件
-        wx.PostEvent(self, button_cmd_event_push(id=self.GetId(), value=None))
-
-    def OnLeftUp(self, event):
-        self.UTBrushColour = [45, 45, 45]
-        self.Last_time = 0.05
-        self.IS_First_Tick = True
-        self.Tick_Frame = 0
-        self.timer.Stop()
-        self.timer.Start(int(1000/self.FPS))
-        wx.PostEvent(self, button_cmd_event_up(id=self.GetId(), value=None))
+        wx.PostEvent(
+            self, button_cmd_event_push(id=self.GetId(), value=self.IS_Checked)
+        )
 
     def OnEnterWindow(self, event):
         self.SetCursor(wx.Cursor(6))
-        self.UTBrushColour = [45, 45, 45]
-        self.UTPenColour = [230, 170, 94]
-        self.Last_time = 0.05
-        self.IS_First_Tick = True
-        self.Tick_Frame = 0
-        self.timer.Stop()
-        self.timer.Start(int(1000/self.FPS))
 
     def OnLeaveWindow(self, event):
         self.SetCursor(wx.Cursor(1))
-        self.UTBrushColour = [0, 0, 0]
-        self.UTPenColour = [255, 208, 104]
-        self.Last_time = 0.05
-        self.IS_First_Tick = True
-        self.Tick_Frame = 0
-        self.timer.Stop()
-        self.timer.Start(int(1000/self.FPS))
 
     def Set2Dark(self):
         self.SetBackgroundColour(wx.Colour("black"))
@@ -145,6 +150,9 @@ class ButtonN(wx.Control):
     def Set2Light(self):
         self.SetBackgroundColour(wx.Colour("white"))
         self.SetForegroundColour(wx.Colour("black"))
+
+    def SetValue(self, bu: bool):
+        self.IS_Checked == bu
 
     def tick(self, event):
         # 线性动画
@@ -188,7 +196,6 @@ class ButtonN(wx.Control):
             self.RPstep = RPdistance / self.AL_Frames
             self.GPstep = GPdistance / self.AL_Frames
             self.BPstep = BPdistance / self.AL_Frames
-
 
         if self.Tick_Frame != self.AL_Frames:
             self.Tick_Frame += 1

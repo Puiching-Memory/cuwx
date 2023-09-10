@@ -37,17 +37,26 @@ def Analyze(path):
 	print('GUI有效行数:', len(data_Dec))
 	##print(data_Dec)
 
-	#Step:针对Button行进行修改,wx.Button替换为cuwx.Button.but
+	#Step:对控件进行调换wx.XX -> cuwx.XX
 	#TODO:支持更多控件的替换
 	cun = 0
 	for i in data_Dec:
-		if 'Butt' in i and '=' in i:
+		if 'Button' in i and '=' in i:
 			head = i[:i.find('=') + 2]
 			bot = i[i.find('=') + 11:]
-			mid = 'cuwx.Button.but'
+			mid = 'cuwx.Button.ButtonN'
 
 			combin = head + mid + bot
 			data_Dec[cun] = combin
+		elif 'CheckBox' in i and '=' in i:
+			head = i[:i.find('=') + 2]
+			bot = i[i.find('=') + 13:]
+			mid = 'cuwx.CheckBox.CheckBoxN'
+
+			combin = head + mid + bot
+
+			data_Dec[cun] = combin
+		
 
 		cun = cun + 1
 
