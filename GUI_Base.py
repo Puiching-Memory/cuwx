@@ -26,11 +26,6 @@ class Main ( wx.Frame ):
 
 		SizerTop = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.ButtTOOL = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
-		self.ButtTOOL.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
-
-		SizerTop.Add( self.ButtTOOL, 0, wx.ALL, 5 )
-
 		self.ButtA = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, 0 )
 		SizerTop.Add( self.ButtA, 0, wx.ALL, 5 )
 
@@ -38,6 +33,9 @@ class Main ( wx.Frame ):
 		self.Butt6.SetFont( wx.Font( 9, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "楷体" ) )
 
 		SizerTop.Add( self.Butt6, 0, wx.ALL, 5 )
+
+		self.ButtTOOL = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
+		SizerTop.Add( self.ButtTOOL, 0, wx.ALL, 5 )
 
 
 		SizerMain.Add( SizerTop, 0, 0, 5 )
@@ -60,6 +58,7 @@ class Main ( wx.Frame ):
 		self.Centre( wx.BOTH )
 
 		# Connect Events
+		self.Bind( wx.EVT_KEY_DOWN, self.MainOnKeyDown )
 		self.Bind( wx.EVT_SIZE, self.MainOnSize )
 
 	def __del__( self ):
@@ -67,6 +66,9 @@ class Main ( wx.Frame ):
 
 
 	# Virtual event handlers, override them in your derived class
+	def MainOnKeyDown( self, event ):
+		event.Skip()
+
 	def MainOnSize( self, event ):
 		event.Skip()
 
