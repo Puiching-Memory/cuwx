@@ -52,6 +52,15 @@ class Main ( wx.Frame ):
 		self.m_checkBox1.SetValue(True)
 		SizerSide.Add( self.m_checkBox1, 0, wx.ALL, 5 )
 
+		self.m_radioBtn1 = wx.RadioButton( self, wx.ID_ANY, u"RadioBtn", wx.DefaultPosition, wx.DefaultSize, 0 )
+		SizerSide.Add( self.m_radioBtn1, 0, wx.ALL, 5 )
+
+		self.m_radioBtn2 = wx.RadioButton( self, wx.ID_ANY, u"RadioBtn", wx.DefaultPosition, wx.DefaultSize, 0 )
+		SizerSide.Add( self.m_radioBtn2, 0, wx.ALL, 5 )
+
+		self.m_radioBtn3 = wx.RadioButton( self, wx.ID_ANY, u"RadioBtn", wx.DefaultPosition, wx.DefaultSize, 0 )
+		SizerSide.Add( self.m_radioBtn3, 0, wx.ALL, 5 )
+
 
 		SizerMain.Add( SizerSide, 0, 0, 5 )
 

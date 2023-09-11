@@ -139,6 +139,13 @@ class CheckBoxN(wx.Control):
 
     def OnEnterWindow(self, event):
         self.SetCursor(wx.Cursor(6))
+        if self.IS_Checked == True:
+            self.UTBrushColour = [i + 5 for i in self.ThemeColour]
+            self.Last_time = 0.05
+            self.IS_First_Tick = True
+            self.Tick_Frame = 0
+            self.timer.Stop()
+            self.timer.Start(int(1000 / self.FPS))
 
     def OnLeaveWindow(self, event):
         self.SetCursor(wx.Cursor(1))
