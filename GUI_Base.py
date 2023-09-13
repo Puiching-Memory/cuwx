@@ -26,22 +26,26 @@ class Main ( wx.Frame ):
 
 		SizerTop = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.ButtA = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
-		SizerTop.Add( self.ButtA, 0, wx.ALL, 5 )
+		self.Butt1 = wx.Button( self, wx.ID_ANY, u"File", wx.DefaultPosition, wx.Size( 100,50 ), wx.BORDER_NONE )
+		SizerTop.Add( self.Butt1, 0, wx.ALL, 5 )
 
-		self.Butt6 = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
-		self.Butt6.SetFont( wx.Font( 9, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "楷体" ) )
+		self.Butt11 = wx.Button( self, wx.ID_ANY, u"Edit", wx.DefaultPosition, wx.Size( 100,50 ), wx.BORDER_NONE )
+		SizerTop.Add( self.Butt11, 0, wx.ALL, 5 )
 
-		SizerTop.Add( self.Butt6, 0, wx.ALL, 5 )
+		self.Butt12 = wx.Button( self, wx.ID_ANY, u"Select", wx.DefaultPosition, wx.Size( 100,50 ), wx.BORDER_NONE )
+		SizerTop.Add( self.Butt12, 0, wx.ALL, 5 )
 
-		self.ButtTOOL = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
-		SizerTop.Add( self.ButtTOOL, 0, wx.ALL, 5 )
+		self.Butt13 = wx.Button( self, wx.ID_ANY, u"Windows", wx.DefaultPosition, wx.Size( 100,50 ), wx.BORDER_NONE )
+		SizerTop.Add( self.Butt13, 0, wx.ALL, 5 )
 
-		self.Butt4 = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
-		SizerTop.Add( self.Butt4, 0, wx.ALL, 5 )
+		self.Butt14 = wx.Button( self, wx.ID_ANY, u"Run", wx.DefaultPosition, wx.Size( 100,50 ), wx.BORDER_NONE )
+		SizerTop.Add( self.Butt14, 0, wx.ALL, 5 )
 
-		self.asd = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
-		SizerTop.Add( self.asd, 0, wx.ALL, 5 )
+		self.Butt141 = wx.Button( self, wx.ID_ANY, u"CMD", wx.DefaultPosition, wx.Size( 100,50 ), wx.BORDER_NONE )
+		SizerTop.Add( self.Butt141, 0, wx.ALL, 5 )
+
+		self.Butt1411 = wx.Button( self, wx.ID_ANY, u"Help", wx.DefaultPosition, wx.Size( 100,50 ), wx.BORDER_NONE )
+		SizerTop.Add( self.Butt1411, 0, wx.ALL, 5 )
 
 
 		SizerMain.Add( SizerTop, 0, 0, 5 )

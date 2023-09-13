@@ -6,10 +6,12 @@ wxpython custom component, designed for win11mica
 
 # TODO
 
-仅支持深色模式，浅色模式处于计划中
+* [ ] 同时支持深色与浅色模式
+* [ ] 高DPI支持
 
 # 组件要求
 
+* python>=3.11
 * wxpython >=4.2.1
 * darkdetect >=0.8.0
 * wim32mica >= 3.0

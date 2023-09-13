@@ -1,6 +1,5 @@
 import ctypes
 import os
-import fnmatch
 
 # https://learn.microsoft.com/zh-cn/windows/win32/api/wingdi/nf-wingdi-addfontresourcew
 #TODO:载入字体后发送系统通知
