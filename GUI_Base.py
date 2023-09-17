@@ -52,7 +52,7 @@ class Main ( wx.Frame ):
 
 		SizerSide = wx.BoxSizer( wx.VERTICAL )
 
-		self.m_checkBox1 = wx.CheckBox( self, wx.ID_ANY, u"Check Me!", wx.DefaultPosition, wx.Size( 200,50 ), 0 )
+		self.m_checkBox1 = wx.CheckBox( self, wx.ID_ANY, u"启用多线程ENG", wx.DefaultPosition, wx.Size( 200,50 ), 0 )
 		self.m_checkBox1.SetValue(True)
 		SizerSide.Add( self.m_checkBox1, 0, wx.ALL, 5 )
 
@@ -65,6 +65,9 @@ class Main ( wx.Frame ):
 		self.m_radioBtn3 = wx.RadioButton( self, wx.ID_ANY, u"RadioBtn", wx.DefaultPosition, wx.DefaultSize, 0 )
 		SizerSide.Add( self.m_radioBtn3, 0, wx.ALL, 5 )
 
+		self.m_toggleBtn1 = wx.ToggleButton( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, 0 )
+		SizerSide.Add( self.m_toggleBtn1, 0, wx.ALL, 5 )
+
 
 		SizerMain.Add( SizerSide, 0, 0, 5 )
 
@@ -76,6 +79,7 @@ class Main ( wx.Frame ):
 
 		# Connect Events
 		self.Bind( wx.EVT_KEY_DOWN, self.MainOnKeyDown )
+		self.Bind( wx.EVT_MOVE, self.MainOnMove )
 		self.Bind( wx.EVT_SIZE, self.MainOnSize )
 
 	def __del__( self ):
@@ -84,6 +88,9 @@ class Main ( wx.Frame ):
 
 	# Virtual event handlers, override them in your derived class
 	def MainOnKeyDown( self, event ):
+		event.Skip()
+
+	def MainOnMove( self, event ):
 		event.Skip()
 
 	def MainOnSize( self, event ):

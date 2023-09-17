@@ -23,6 +23,8 @@ import darkdetect
 import ctypes
 import os
 
+import mss,mss.tools
+
 
 ##############################
 # GUI的函数桥接
@@ -91,6 +93,8 @@ class CalcFrame(Main, wx.Frame):
         self.Bind(cuwx.EVT_BUTTON_PUSH, self.OnLeftDown, self.Butt1)
         self.Bind(cuwx.EVT_BUTTON_UP, self.OnLeftUp, self.Butt1)
 
+
+
     def MainOnSize(self, event):
         event.Skip()
         ##print(self.GetSize())
@@ -143,6 +147,10 @@ class CalcFrame(Main, wx.Frame):
 
     def OnLeftUp(self, event):
         print(2)
+
+    def MainOnMove(self,event):
+        ##print(self.GetPosition())
+        event.Skip()
 
 
 ##############################

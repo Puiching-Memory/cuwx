@@ -19,7 +19,7 @@ def Analyze(path):
 		针对wxFormBuilder (version 3.10.1-0-g8feb16b3)
 	"""
 
-	with open(path, 'r') as data:
+	with open(path, 'r',encoding='utf8') as data:
 		#Step:过滤无关字符
 		data_Dec = [] #过滤后代码行list
 		for i in data.readlines():
@@ -41,7 +41,26 @@ def Analyze(path):
 	#TODO:支持更多控件的替换
 	cun = 0
 	for i in data_Dec:
-		if 'wx.Button' in i and '=' in i:
+		if 'Filter' in i and '=' in i:
+			head = i[:i.find('=') + 2]
+			bot = i[i.find('=') + 11:]
+			mid = 'cuwx.Filter.FilterN'
+
+			combin = head + mid + bot
+
+			data_Dec[cun] = combin
+
+		elif 'wx.ToggleButton' in i and '=' in i:
+			head = i[:i.find('=') + 2]
+			bot = i[i.find('=') + 17:]
+			mid = 'cuwx.ToggleButton.ToggleButtonN'
+
+			combin = head + mid + bot
+			print(combin)
+
+			data_Dec[cun] = combin
+		
+		elif 'wx.Button' in i and '=' in i:
 			head = i[:i.find('=') + 2]
 			bot = i[i.find('=') + 11:]
 			mid = 'cuwx.Button.ButtonN'
@@ -53,11 +72,12 @@ def Analyze(path):
 			head = i[:i.find('=') + 2]
 			bot = i[i.find('=') + 13:]
 			mid = 'cuwx.CheckBox.CheckBoxN'
+			
 
 			combin = head + mid + bot
 
 			data_Dec[cun] = combin
-		
+
 
 		cun = cun + 1
 

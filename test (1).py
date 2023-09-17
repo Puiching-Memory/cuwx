@@ -1,4 +1,3 @@
-
-(a,b,c) = (1,2,3)
-
-print(a,c)
+import clr  
+clr.AddReference('Windows')  
+##from Windows.Graphics.Capture import GraphicsCaptureItem, GraphicsCaptureSession

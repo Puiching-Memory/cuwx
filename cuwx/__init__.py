@@ -10,6 +10,8 @@ import winreg
 
 from .Button import ButtonN,EVT_BUTTON_PUSH,EVT_BUTTON_UP
 from .CheckBox import CheckBoxN,EVT_CHECKBOX_PUSH,EVT_CHECKBOX_UP
+from .ToggleButton import ToggleButtonN
+from .Filter import FilterN
 from .Theme import *
 from .Font import *
 from .Colour import *

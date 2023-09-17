@@ -9,7 +9,7 @@ def RGB2HSL(R: int, G: int, B: int):
     RGB颜色转为HSL颜色
     ---
     tar:R,G,B->int(0,255)
-    return:(H,S,L)
+    return:[H,S,L]
     doc:
         H 色相 (0°,360°)
         S 饱和度 (0%,100%)
@@ -44,7 +44,7 @@ def RGB2HSL(R: int, G: int, B: int):
     else:
         S = Delta / (1 - abs(2 * L - 1))
 
-    return round(H), S, L
+    return [round(H), S, L]
 
 
 def HSL2RGB(H, S, L):
@@ -52,7 +52,7 @@ def HSL2RGB(H, S, L):
     HSL颜色转为RGB颜色
     ---
     tar:H,S,L->int(0,255)
-    return:(R,G,B)
+    return:[R,G,B]
     doc:
         R Red (0,255)
         G Green (0,255)
@@ -78,7 +78,7 @@ def HSL2RGB(H, S, L):
 
     (R, G, B) = ((r1 + m) * 255, (g1 + m) * 255, (b1 + m) * 255)
 
-    return round(R), round(G), round(B)
+    return [round(R), round(G), round(B)]
 
 
 if __name__ == "__main__":
