@@ -7,6 +7,8 @@ from .Theme import get_windows_theme_color
 button_cmd_event_push, EVT_CHECKBOX_PUSH = wx.lib.newevent.NewCommandEvent()  # 按下按钮事件
 button_cmd_event_up, EVT_CHECKBOX_UP = wx.lib.newevent.NewCommandEvent()  # 松开按钮事件
 
+# TODO:重构
+
 
 class CheckBoxN(wx.Control):
     def __init__(

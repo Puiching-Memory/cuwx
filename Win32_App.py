@@ -23,8 +23,6 @@ import darkdetect
 import ctypes
 import os
 
-import mss,mss.tools
-
 
 ##############################
 # GUI的函数桥接
@@ -48,7 +46,7 @@ class CalcFrame(Main, wx.Frame):
         style = win32mica.MicaStyle.DEFAULT
         win32mica.ApplyMica(HWND=hwnd, Theme=mode, Style=style)
 
-        #编辑器识别符
+        # 编辑器识别符
         self.Butt1: cuwx.Button
         self.Butt6: cuwx.Button
 
@@ -92,8 +90,6 @@ class CalcFrame(Main, wx.Frame):
         # 绑定事件
         self.Bind(cuwx.EVT_BUTTON_PUSH, self.OnLeftDown, self.Butt1)
         self.Bind(cuwx.EVT_BUTTON_UP, self.OnLeftUp, self.Butt1)
-
-
 
     def MainOnSize(self, event):
         event.Skip()
@@ -148,7 +144,7 @@ class CalcFrame(Main, wx.Frame):
     def OnLeftUp(self, event):
         print(2)
 
-    def MainOnMove(self,event):
+    def MainOnMove(self, event):
         ##print(self.GetPosition())
         event.Skip()
 

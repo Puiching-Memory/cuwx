@@ -2,6 +2,7 @@ import wx
 import wx.lib.newevent
 import win32api
 from .Theme import get_windows_theme_color
+from .MathN import *
 
 # 自定义事件
 button_cmd_event_push, EVT_BUTTON_PUSH = wx.lib.newevent.NewCommandEvent()  # 按下按钮事件
@@ -31,8 +32,8 @@ class ToggleButtonN(wx.Control):
         settings = win32api.EnumDisplaySettings(
             win32api.EnumDisplayDevices().DeviceName, -1
         )
-        
-        self.IS_Checked = False #是否按下
+
+        self.IS_Checked = False  # 是否按下
 
         self.IS_First_Tick = True  # 是否为首帧
         self.Tick_Frame = 0  # 当前帧
@@ -85,7 +86,6 @@ class ToggleButtonN(wx.Control):
 
         width, height = self.GetClientSize()  # 可绘制区大小
 
-
         dc.SetFont(self.GetFont())  # 设置字体
         label = self.GetLabel()  # 设置文本
         textWidth, textHeight = dc.GetTextExtent(label)  # 获取文本区大小
@@ -97,11 +97,23 @@ class ToggleButtonN(wx.Control):
         if self.IS_Checked == True:
             dc.SetBrush(wx.Brush(self.SNPenColour))
             dc.SetPen(wx.Pen(self.SNPenColour))
-            dc.DrawRoundedRectangle(round(width/2 - (width -40)/2), round(height - height /8), width-40, 4, 2) # 绘制下划线
+            dc.DrawRoundedRectangle(
+                round(width / 2 - (width - 40) / 2),
+                round(height - height / 8),
+                width - 40,
+                4,
+                2,
+            )  # 绘制下划线
         else:
-            dc.SetBrush(wx.Brush(wx.Colour(35,35,35)))
-            dc.SetPen(wx.Pen(wx.Colour(35,35,35)))
-            dc.DrawRoundedRectangle(round(width/2 - (width -40)/2), round(height - height /8), width-40, 4, 2) # 绘制下划线
+            dc.SetBrush(wx.Brush(wx.Colour(35, 35, 35)))
+            dc.SetPen(wx.Pen(wx.Colour(35, 35, 35)))
+            dc.DrawRoundedRectangle(
+                round(width / 2 - (width - 40) / 2),
+                round(height - height / 8),
+                width - 40,
+                4,
+                2,
+            )  # 绘制下划线
 
         # 计算以居中对齐
         textXpos = width / 2 - textWidth / 2
@@ -118,85 +130,81 @@ class ToggleButtonN(wx.Control):
     def OnLeftDown(self, event):
         if self.IS_Checked == False:
             self.UTBrushColour = [40, 40, 40]
-            self.Last_time = 0.05
+            self.Last_time = 0.2
             self.IS_First_Tick = True
             self.Tick_Frame = 0
             self.timer.Stop()
-            self.timer.Start(int(1000/self.FPS))
+            self.timer.Start(int(1000 / self.FPS))
             # 发送事件
             wx.PostEvent(self, button_cmd_event_push(id=self.GetId(), value=None))
         else:
             self.UTBrushColour = [60, 60, 60]
-            self.Last_time = 0.05
+            self.Last_time = 0.2
             self.IS_First_Tick = True
             self.Tick_Frame = 0
             self.timer.Stop()
-            self.timer.Start(int(1000/self.FPS))
+            self.timer.Start(int(1000 / self.FPS))
             wx.PostEvent(self, button_cmd_event_up(id=self.GetId(), value=None))
-
 
     def OnLeftUp(self, event):
         if self.IS_Checked == False:
             self.IS_Checked = True
             self.UTPenColour = self.ThemeColour
             self.UTBrushColour = [70, 70, 70]
-            self.Last_time = 0.05
+            self.Last_time = 0.2
             self.IS_First_Tick = True
             self.Tick_Frame = 0
             self.timer.Stop()
-            self.timer.Start(int(1000/self.FPS))
+            self.timer.Start(int(1000 / self.FPS))
             wx.PostEvent(self, button_cmd_event_up(id=self.GetId(), value=None))
         else:
             self.IS_Checked = False
             self.UTBrushColour = [45, 45, 45]
             self.UTPenColour = [230, 170, 94]
-            self.Last_time = 0.05
+            self.Last_time = 0.2
             self.IS_First_Tick = True
             self.Tick_Frame = 0
             self.timer.Stop()
-            self.timer.Start(int(1000/self.FPS))
+            self.timer.Start(int(1000 / self.FPS))
             wx.PostEvent(self, button_cmd_event_up(id=self.GetId(), value=None))
-
-
 
     def OnEnterWindow(self, event):
         self.SetCursor(wx.Cursor(6))
         if self.IS_Checked == True:
             self.UTBrushColour = [80, 80, 80]
             self.UTPenColour = self.ThemeColour
-            self.Last_time = 0.05
+            self.Last_time = 0.2
             self.IS_First_Tick = True
             self.Tick_Frame = 0
             self.timer.Stop()
-            self.timer.Start(int(1000/self.FPS))
+            self.timer.Start(int(1000 / self.FPS))
         else:
             self.UTBrushColour = [45, 45, 45]
             self.UTPenColour = [230, 170, 94]
-            self.Last_time = 0.05
+            self.Last_time = 0.2
             self.IS_First_Tick = True
             self.Tick_Frame = 0
             self.timer.Stop()
-            self.timer.Start(int(1000/self.FPS))
+            self.timer.Start(int(1000 / self.FPS))
 
     def OnLeaveWindow(self, event):
         self.SetCursor(wx.Cursor(1))
         if self.IS_Checked == True:
             self.UTBrushColour = [70, 70, 70]
             self.UTPenColour = self.ThemeColour
-            self.Last_time = 0.05
+            self.Last_time = 0.2
             self.IS_First_Tick = True
             self.Tick_Frame = 0
             self.timer.Stop()
-            self.timer.Start(int(1000/self.FPS))
+            self.timer.Start(int(1000 / self.FPS))
         else:
             self.UTBrushColour = [0, 0, 0]
             self.UTPenColour = [255, 208, 104]
-            self.Last_time = 0.05
+            self.Last_time = 0.2
             self.IS_First_Tick = True
             self.Tick_Frame = 0
             self.timer.Stop()
-            self.timer.Start(int(1000/self.FPS))
-
+            self.timer.Start(int(1000 / self.FPS))
 
     def Set2Dark(self):
         self.SetBackgroundColour(wx.Colour("black"))
@@ -207,17 +215,17 @@ class ToggleButtonN(wx.Control):
         self.SetForegroundColour(wx.Colour("black"))
 
     def tick(self, event):
-        # 线性动画
+        # 动画,指数缓入
         if self.IS_First_Tick == True:
             self.IS_First_Tick = False
             # 当前颜色值
-            RBrush = self.UNBrushColour[0]
-            GBrush = self.UNBrushColour[1]
-            BBrush = self.UNBrushColour[2]
+            self.RBrush = self.UNBrushColour[0]
+            self.GBrush = self.UNBrushColour[1]
+            self.BBrush = self.UNBrushColour[2]
 
-            RPen = self.UNPenColour[0]
-            GPen = self.UNPenColour[1]
-            BPen = self.UNPenColour[2]
+            self.RPen = self.UNPenColour[0]
+            self.GPen = self.UNPenColour[1]
+            self.BPen = self.UNPenColour[2]
 
             # 目标颜色值
             RBrushTar = self.UTBrushColour[0]
@@ -229,33 +237,26 @@ class ToggleButtonN(wx.Control):
             BPenTar = self.UTPenColour[2]
 
             # 颜色差值
-            RBdistance = RBrushTar - RBrush
-            GBdistance = GBrushTar - GBrush
-            BBdistance = BBrushTar - BBrush
+            self.RBdistance = RBrushTar - self.RBrush
+            self.GBdistance = GBrushTar - self.GBrush
+            self.BBdistance = BBrushTar - self.BBrush
 
-            RPdistance = RPenTar - RPen
-            GPdistance = GPenTar - GPen
-            BPdistance = BPenTar - BPen
+            self.RPdistance = RPenTar - self.RPen
+            self.GPdistance = GPenTar - self.GPen
+            self.BPdistance = BPenTar - self.BPen
 
             # 动画总帧数
             self.AL_Frames = round(self.FPS * self.Last_time)
 
-            # 颜色步长
-            self.RBstep = RBdistance / self.AL_Frames
-            self.GBstep = GBdistance / self.AL_Frames
-            self.BBstep = BBdistance / self.AL_Frames
-
-            self.RPstep = RPdistance / self.AL_Frames
-            self.GPstep = GPdistance / self.AL_Frames
-            self.BPstep = BPdistance / self.AL_Frames
-
-
         if self.Tick_Frame != self.AL_Frames:
             self.Tick_Frame += 1
 
-            self.UNBrushColour[0] += self.RBstep
-            self.UNBrushColour[1] += self.GBstep
-            self.UNBrushColour[2] += self.BBstep
+            # 获取缩放倍率
+            sc = ExponentialEaseOut(self.Tick_Frame / self.AL_Frames)
+
+            self.UNBrushColour[0] = self.RBrush + self.RBdistance * sc
+            self.UNBrushColour[1] = self.GBrush + self.GBdistance * sc
+            self.UNBrushColour[2] = self.BBrush + self.BBdistance * sc
 
             self.SNBrushColour = wx.Colour(
                 int(self.UNBrushColour[0]),
@@ -263,9 +264,11 @@ class ToggleButtonN(wx.Control):
                 int(self.UNBrushColour[2]),
             )
 
-            self.UNPenColour[0] += self.RPstep
-            self.UNPenColour[1] += self.GPstep
-            self.UNPenColour[2] += self.GPstep
+            ##print(self.SNBrushColour)
+
+            self.UNPenColour[0] = self.RPen + self.RPdistance * sc
+            self.UNPenColour[1] = self.GPen + self.GPdistance * sc
+            self.UNPenColour[2] = self.BPen + self.BPdistance * sc
 
             self.SNPenColour = wx.Colour(
                 int(self.UNPenColour[0]),
@@ -277,4 +280,18 @@ class ToggleButtonN(wx.Control):
         else:
             self.IS_First_Tick = True
             self.Tick_Frame = 0
+            del (
+                self.RBrush,
+                self.BBrush,
+                self.GBrush,
+                self.RPen,
+                self.GPen,
+                self.BPen,
+                self.RBdistance,
+                self.GBdistance,
+                self.BBdistance,
+                self.RPdistance,
+                self.GPdistance,
+                self.BPdistance,
+            )
             self.timer.Stop()
