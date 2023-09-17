@@ -1,3 +1,8 @@
+'''
+已弃用！！！！
+'''
+
+
 import wx
 import wx.lib.newevent
 import win32api

@@ -1,4 +1,4 @@
-import wx
+
 import winreg
 
 def get_windows_theme_color():
