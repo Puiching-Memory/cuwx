@@ -98,6 +98,10 @@ class ToggleButtonN(wx.Control):
             dc.SetBrush(wx.Brush(self.SNPenColour))
             dc.SetPen(wx.Pen(self.SNPenColour))
             dc.DrawRoundedRectangle(round(width/2 - (width -40)/2), round(height - height /8), width-40, 4, 2) # 绘制下划线
+        else:
+            dc.SetBrush(wx.Brush(wx.Colour(35,35,35)))
+            dc.SetPen(wx.Pen(wx.Colour(35,35,35)))
+            dc.DrawRoundedRectangle(round(width/2 - (width -40)/2), round(height - height /8), width-40, 4, 2) # 绘制下划线
 
         # 计算以居中对齐
         textXpos = width / 2 - textWidth / 2
@@ -113,7 +117,7 @@ class ToggleButtonN(wx.Control):
 
     def OnLeftDown(self, event):
         if self.IS_Checked == False:
-            self.UTBrushColour = [45, 45, 45]
+            self.UTBrushColour = [40, 40, 40]
             self.Last_time = 0.05
             self.IS_First_Tick = True
             self.Tick_Frame = 0
