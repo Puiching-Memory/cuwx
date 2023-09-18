@@ -40,10 +40,10 @@ def Analyze(path):
     # TODO:支持更多控件的替换
     cun = 0
     for i in data_Dec:
-        if "Filter" in i and "=" in i:
+        if "Switch" in i and "=" in i:
             head = i[: i.find("=") + 2]
             bot = i[i.find("=") + 11 :]
-            mid = "cuwx.Filter.FilterN"
+            mid = "cuwx.ToggleSwitch.ToggleSwitchN"
 
             combin = head + mid + bot
 

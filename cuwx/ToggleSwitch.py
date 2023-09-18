@@ -8,11 +8,10 @@ from .MathN import *
 button_cmd_event_push, EVT_BUTTON_PUSH = wx.lib.newevent.NewCommandEvent()  # 按下按钮事件
 button_cmd_event_up, EVT_BUTTON_UP = wx.lib.newevent.NewCommandEvent()  # 松开按钮事件
 
-# TODO:三阶贝塞尔动画
-# TODO:按钮内阴影
 
+#TODO 重新设计tick函数，实现颜色/位置/形状的缓动
 
-class ToggleButtonN(wx.Control):
+class ToggleSwitchN(wx.Control):
     def __init__(
         self,
         parent,
@@ -92,31 +91,15 @@ class ToggleButtonN(wx.Control):
 
         dc.SetBrush(wx.Brush(self.SNBrushColour))
         dc.SetPen(wx.Pen(self.SNPenColour))
-        dc.DrawRoundedRectangle(0, 0, width, height, 4)  # 绘制圆角
+        dc.DrawRoundedRectangle(0, round(height/2-12.5), 55, 25, 8)  # 绘制圆角
 
-        if self.IS_Checked == True:
-            dc.SetBrush(wx.Brush(self.SNPenColour))
-            dc.SetPen(wx.Pen(self.SNPenColour))
-            dc.DrawRoundedRectangle(
-                round(width / 2 - (width - 40) / 2),
-                round(height - height / 6),
-                width - 40,
-                4,
-                2,
-            )  # 绘制下划线
-        else:
-            dc.SetBrush(wx.Brush(wx.Colour(35, 35, 35)))
-            dc.SetPen(wx.Pen(wx.Colour(35, 35, 35)))
-            dc.DrawRoundedRectangle(
-                round(width / 2 - (width - 40) / 2),
-                round(height - height / 6),
-                width - 40,
-                4,
-                2,
-            )  # 绘制下划线
+        # 绘制开关圏
+        dc.SetBrush(wx.Brush(wx.Colour(255,255,255)))
+        dc.SetPen(wx.Pen(wx.Colour(255,255,255)))
+        dc.DrawCircle(12,round(height/2-1),8)
 
-        # 计算以居中对齐
-        textXpos = width / 2 - textWidth / 2
+        # 计算文字位置
+        textXpos = (width - 55) / 2
         textYpos = height / 2 - textHeight / 2
         dc.DrawText(label, int(textXpos), int(textYpos))  # 绘制文字
 

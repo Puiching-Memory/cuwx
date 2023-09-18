@@ -23,7 +23,6 @@ import darkdetect
 import ctypes
 import os
 
-
 ##############################
 # GUI的函数桥接
 ##############################
@@ -91,6 +90,9 @@ class CalcFrame(Main, wx.Frame):
         self.Bind(cuwx.EVT_BUTTON_PUSH, self.OnLeftDown, self.Butt1)
         self.Bind(cuwx.EVT_BUTTON_UP, self.OnLeftUp, self.Butt1)
 
+        self.FlyWindows = cuwx.FlyoutN(self)
+
+
     def MainOnSize(self, event):
         event.Skip()
         ##print(self.GetSize())
@@ -139,7 +141,11 @@ class CalcFrame(Main, wx.Frame):
         self.SetSize(x, y)
 
     def OnLeftDown(self, event):
-        print(1)
+        if self.FlyWindows.IsShown() == False:
+            self.FlyWindows.Show()
+            self.FlyWindows.Append_Text('aaa',wx.Size(100,100))
+        else:
+            self.FlyWindows.SetFocus()
 
     def OnLeftUp(self, event):
         print(2)

@@ -68,6 +68,9 @@ class Main ( wx.Frame ):
 		self.m_toggleBtn1 = wx.ToggleButton( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, 0 )
 		SizerSide.Add( self.m_toggleBtn1, 0, wx.ALL, 5 )
 
+		self.SwitchMA = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.Size( 200,40 ), 0 )
+		SizerSide.Add( self.SwitchMA, 0, wx.ALL, 5 )
+
 
 		SizerMain.Add( SizerSide, 0, 0, 5 )
 
