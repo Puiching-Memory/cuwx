@@ -9,7 +9,8 @@ button_cmd_event_push, EVT_BUTTON_PUSH = wx.lib.newevent.NewCommandEvent()  # �
 button_cmd_event_up, EVT_BUTTON_UP = wx.lib.newevent.NewCommandEvent()  # 松开按钮事件
 
 
-#TODO 重新设计tick函数，实现颜色/位置/形状的缓动
+# TODO 重新设计tick函数，实现颜色/位置/形状的缓动
+
 
 class ToggleSwitchN(wx.Control):
     def __init__(
@@ -53,6 +54,8 @@ class ToggleSwitchN(wx.Control):
         self.SNPenColour = wx.Colour(255, 208, 104)  # 笔颜色，这通常会用于描边
         self.UNBrushColour = [0, 0, 0]  # 用户刷子颜色,不使用wx.colour,因为精度不足,用于计算动画
         self.UNPenColour = [255, 208, 104]  # 用户笔颜色
+        self.UNCircle = [12, round(self.GetClientSize()[1] / 2 - 1)]  # 用户开关位置
+        self.UTCircle = [12, round(self.GetClientSize()[1] / 2 - 1)]  # 目标开关位置
         self.UTBrushColour = [0, 0, 0]  # 目标刷子颜色
         self.UTPenColour = [255, 208, 104]  # 目标笔颜色
         self.SetForegroundColour(wx.Colour("white"))  # 字体颜色
@@ -70,6 +73,8 @@ class ToggleSwitchN(wx.Control):
         self.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
         self.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
         self.Bind(wx.EVT_SIZE, self.OnSize)
+        ##self.Bind(wx.EVT_DO)
+
 
         self.Bind(wx.EVT_TIMER, self.tick, id=wx.ID_ANY)  # 计时器事件
 
@@ -91,12 +96,12 @@ class ToggleSwitchN(wx.Control):
 
         dc.SetBrush(wx.Brush(self.SNBrushColour))
         dc.SetPen(wx.Pen(self.SNPenColour))
-        dc.DrawRoundedRectangle(0, round(height/2-12.5), 55, 25, 8)  # 绘制圆角
+        dc.DrawRoundedRectangle(0, round(height / 2 - 12), 55, 24, 8)  # 绘制圆角
 
         # 绘制开关圏
-        dc.SetBrush(wx.Brush(wx.Colour(255,255,255)))
-        dc.SetPen(wx.Pen(wx.Colour(255,255,255)))
-        dc.DrawCircle(12,round(height/2-1),8)
+        dc.SetBrush(wx.Brush(wx.Colour(255, 255, 255)))
+        dc.SetPen(wx.Pen(wx.Colour(255, 255, 255)))
+        dc.DrawCircle(self.UNCircle[0], self.UNCircle[1], 8)
 
         # 计算文字位置
         textXpos = (width - 55) / 2
@@ -106,8 +111,18 @@ class ToggleSwitchN(wx.Control):
     def EraseBackground(self, event):
         pass
         # event.Skip()
+    
+    def OnSize(self,event):
+        if self.IS_Checked == True:
+            self.UNCircle = [42, round(self.GetClientSize()[1] / 2 - 1)]
+            self.UTCircle = [42, round(self.GetClientSize()[1] / 2 - 1)]
+        else:
+            self.UNCircle = [12, round(self.GetClientSize()[1] / 2 - 1)]
+            self.UTCircle = [12, round(self.GetClientSize()[1] / 2 - 1)]
+        self.Refresh()
+        event.Skip()
 
-    def OnSize(self, event):
+    def DoGetBestSize(self, event):
         event.Skip()
 
     def OnLeftDown(self, event):
@@ -133,7 +148,8 @@ class ToggleSwitchN(wx.Control):
         if self.IS_Checked == False:
             self.IS_Checked = True
             self.UTPenColour = self.ThemeColour
-            self.UTBrushColour = [70, 70, 70]
+            self.UTBrushColour = self.ThemeColour
+            self.UTCircle = [42, round(self.GetClientSize()[1] / 2 - 1)]
             self.Last_time = 0.2
             self.IS_First_Tick = True
             self.Tick_Frame = 0
@@ -144,6 +160,7 @@ class ToggleSwitchN(wx.Control):
             self.IS_Checked = False
             self.UTBrushColour = [45, 45, 45]
             self.UTPenColour = [230, 170, 94]
+            self.UTCircle = [12, round(self.GetClientSize()[1] / 2 - 1)]
             self.Last_time = 0.2
             self.IS_First_Tick = True
             self.Tick_Frame = 0
@@ -154,7 +171,7 @@ class ToggleSwitchN(wx.Control):
     def OnEnterWindow(self, event):
         self.SetCursor(wx.Cursor(6))
         if self.IS_Checked == True:
-            self.UTBrushColour = [80, 80, 80]
+            self.UTBrushColour = self.ThemeColour
             self.UTPenColour = self.ThemeColour
             self.Last_time = 0.2
             self.IS_First_Tick = True
@@ -173,7 +190,7 @@ class ToggleSwitchN(wx.Control):
     def OnLeaveWindow(self, event):
         self.SetCursor(wx.Cursor(1))
         if self.IS_Checked == True:
-            self.UTBrushColour = [70, 70, 70]
+            self.UTBrushColour = self.ThemeColour
             self.UTPenColour = self.ThemeColour
             self.Last_time = 0.2
             self.IS_First_Tick = True
@@ -201,7 +218,7 @@ class ToggleSwitchN(wx.Control):
         # 动画,指数缓入
         if self.IS_First_Tick == True:
             self.IS_First_Tick = False
-            # 当前颜色值
+            # 起始值
             self.RBrush = self.UNBrushColour[0]
             self.GBrush = self.UNBrushColour[1]
             self.BBrush = self.UNBrushColour[2]
@@ -210,23 +227,20 @@ class ToggleSwitchN(wx.Control):
             self.GPen = self.UNPenColour[1]
             self.BPen = self.UNPenColour[2]
 
-            # 目标颜色值
-            RBrushTar = self.UTBrushColour[0]
-            GBrushTar = self.UTBrushColour[1]
-            BBrushTar = self.UTBrushColour[2]
+            self.XCircle = self.UNCircle[0]
+            self.YCircle = self.UNCircle[1]
 
-            RPenTar = self.UTPenColour[0]
-            GPenTar = self.UTPenColour[1]
-            BPenTar = self.UTPenColour[2]
+            # 差值
+            self.RBdistance = self.UTBrushColour[0] - self.RBrush
+            self.GBdistance = self.UTBrushColour[1] - self.GBrush
+            self.BBdistance = self.UTBrushColour[2] - self.BBrush
 
-            # 颜色差值
-            self.RBdistance = RBrushTar - self.RBrush
-            self.GBdistance = GBrushTar - self.GBrush
-            self.BBdistance = BBrushTar - self.BBrush
+            self.RPdistance = self.UTPenColour[0] - self.RPen
+            self.GPdistance = self.UTPenColour[1] - self.GPen
+            self.BPdistance = self.UTPenColour[2] - self.BPen
 
-            self.RPdistance = RPenTar - self.RPen
-            self.GPdistance = GPenTar - self.GPen
-            self.BPdistance = BPenTar - self.BPen
+            self.XCdistance = self.UTCircle[0] - self.XCircle
+            self.YCdistance = self.UTCircle[1] - self.YCircle
 
             # 动画总帧数
             self.AL_Frames = round(self.FPS * self.Last_time)
@@ -258,6 +272,10 @@ class ToggleSwitchN(wx.Control):
                 int(self.UNPenColour[1]),
                 int(self.UNPenColour[2]),
             )
+
+
+            self.UNCircle[0] = round(self.XCircle + self.XCdistance * sc)
+            self.UNCircle[1] = round(self.YCircle + self.YCdistance * sc)
 
             self.Refresh()
         else:
