@@ -4,6 +4,7 @@
 1.桥接
 2.事件绑定
 3.字体调整
+4.IDLE链接
 """
 
 ##############################
@@ -22,6 +23,8 @@ import win32mica
 import darkdetect
 import ctypes
 import os
+
+import test
 
 ##############################
 # GUI的函数桥接
@@ -46,8 +49,8 @@ class CalcFrame(Main, wx.Frame):
         win32mica.ApplyMica(HWND=hwnd, Theme=mode, Style=style)
 
         # 编辑器识别符
-        self.Butt1: cuwx.Button
-        self.Butt6: cuwx.Button
+        self.Butt1: cuwx.ButtonN
+        self.CMBA: cuwx.ComboBoxN
 
         # 查找字体路径
         directory = "./cuwx/font"
@@ -60,8 +63,17 @@ class CalcFrame(Main, wx.Frame):
             path = os.path.abspath(i)
             cuwx.Font.Load(path)
 
-        Englist_Font = wx.Font(
-            9,
+        Englist_Font_Normal = wx.Font(
+            12,
+            wx.FONTFAMILY_MODERN,
+            wx.FONTSTYLE_NORMAL,
+            wx.FONTWEIGHT_NORMAL,
+            False,
+            "Rajdhani",
+        )
+
+        Englist_Font_Big = wx.Font(
+            17,
             wx.FONTFAMILY_MODERN,
             wx.FONTSTYLE_NORMAL,
             wx.FONTWEIGHT_NORMAL,
@@ -78,7 +90,17 @@ class CalcFrame(Main, wx.Frame):
             "Rajdhani",
         )
 
-        self.Butt1.SetFont(Englist_Font)
+        ICO_Font = wx.Font(
+            9,
+            wx.FONTFAMILY_MODERN,
+            wx.FONTSTYLE_NORMAL,
+            wx.FONTWEIGHT_NORMAL,
+            False,
+            "Segoe Fluent Icons",
+        )
+
+        self.Butt1.SetFont(Englist_Font_Normal)
+        self.CMBA.SetFont(ICO_Font)
 
         # 启用双缓冲
         self.SetDoubleBuffered(True)
@@ -89,9 +111,9 @@ class CalcFrame(Main, wx.Frame):
         # 绑定事件
         self.Bind(cuwx.EVT_BUTTON_PUSH, self.OnLeftDown, self.Butt1)
         self.Bind(cuwx.EVT_BUTTON_UP, self.OnLeftUp, self.Butt1)
+        self.Bind(cuwx.EVT_COMBOBOX_DOWN,self.OnComD, self.CMBA)
 
         self.FlyWindows = cuwx.FlyoutN(self)
-
 
     def MainOnSize(self, event):
         event.Skip()
@@ -149,6 +171,11 @@ class CalcFrame(Main, wx.Frame):
 
     def OnLeftUp(self, event):
         print(2)
+
+    def OnComD(self, event):
+        aa = cuwx.ComboPopupN(self,[])
+        aa.Show()
+        aa.SetPosition(wx.Point(500,550))
 
     def MainOnMove(self, event):
         ##print(self.GetPosition())

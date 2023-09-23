@@ -3,6 +3,7 @@ import wx.lib.newevent
 import win32api
 from .Theme import get_windows_theme_color
 from .MathN import *
+from .Colour import *
 
 # 自定义事件
 button_cmd_event_push, EVT_BUTTON_PUSH = wx.lib.newevent.NewCommandEvent()  # 按下按钮事件
@@ -136,7 +137,9 @@ class ToggleSwitchN(wx.Control):
             # 发送事件
             wx.PostEvent(self, button_cmd_event_push(id=self.GetId(), value=None))
         else:
-            self.UTBrushColour = [60, 60, 60]
+            HSLC = RGB2HSL(*self.ThemeColour)
+            RGBC = HSL2RGB(HSLC[0],HSLC[1],HSLC[2]-0.1)
+            self.UTBrushColour = RGBC
             self.Last_time = 0.2
             self.IS_First_Tick = True
             self.Tick_Frame = 0
@@ -171,7 +174,9 @@ class ToggleSwitchN(wx.Control):
     def OnEnterWindow(self, event):
         self.SetCursor(wx.Cursor(6))
         if self.IS_Checked == True:
-            self.UTBrushColour = self.ThemeColour
+            HSLC = RGB2HSL(*self.ThemeColour)
+            RGBC = HSL2RGB(HSLC[0],HSLC[1],HSLC[2]-0.05)
+            self.UTBrushColour = RGBC
             self.UTPenColour = self.ThemeColour
             self.Last_time = 0.2
             self.IS_First_Tick = True

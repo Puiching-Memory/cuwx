@@ -12,6 +12,8 @@ from .Button import ButtonN,EVT_BUTTON_PUSH,EVT_BUTTON_UP
 from .CheckBox import CheckBoxN,EVT_CHECKBOX_PUSH,EVT_CHECKBOX_UP
 from .ToggleButton import ToggleButtonN
 from .ToggleSwitch import ToggleSwitchN
+from .ComboBox import ComboBoxN,EVT_COMBOBOX_UP,EVT_COMBOBOX_DOWN
+from .ComboPopup import ComboPopupN
 from .Flyout import FlyoutN
 from .Theme import *
 from .Font import *

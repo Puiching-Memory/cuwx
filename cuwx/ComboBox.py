@@ -5,22 +5,22 @@ from .Theme import get_windows_theme_color
 from .MathN import *
 
 # 自定义事件
-button_cmd_event_push, EVT_BUTTON_PUSH = wx.lib.newevent.NewCommandEvent()  # 按下按钮事件
-button_cmd_event_up, EVT_BUTTON_UP = wx.lib.newevent.NewCommandEvent()  # 松开按钮事件
+combobox_cmd_event_down, EVT_COMBOBOX_DOWN = wx.lib.newevent.NewCommandEvent()  # 按下事件
+combobox_cmd_event_up, EVT_COMBOBOX_UP = wx.lib.newevent.NewCommandEvent()  # 松开事件
 
-# TODO:三阶贝塞尔动画
-# TODO:按钮内阴影
+# TODO:可变箭头角度
 
 
-class ToggleButtonN(wx.Control):
+class ComboBoxN(wx.Control):
     def __init__(
         self,
         parent,
         id=wx.ID_ANY,
-        label="",
+        tips="",
         pos=wx.DefaultPosition,
         size=wx.DefaultSize,
         style=wx.NO_BORDER,
+        choise=[],
         *args,
         **kwargs
     ):
@@ -34,6 +34,9 @@ class ToggleButtonN(wx.Control):
         )
 
         self.IS_Checked = False  # 是否按下
+        self.IS_Empty = True  # 选项是否为空(将显示提示字符)
+        self.NArrow_Angle = 0  # 当前箭头角度,范围:0-360°
+        self.TArrow_Angle = 0  # 目标箭头角度
 
         self.IS_First_Tick = True  # 是否为首帧
         self.Tick_Frame = 0  # 当前帧
@@ -50,7 +53,7 @@ class ToggleButtonN(wx.Control):
         g = get_windows_theme_color()[1]
         b = get_windows_theme_color()[2]
         self.ThemeColour = [r, g, b]
-        self.SNBrushColour = wx.Colour(0, 0, 0)  # 刷子颜色，这通常会用于内填充
+        self.SNBrushColour = wx.Colour(20, 20, 20)  # 刷子颜色，这通常会用于内填充
         self.SNPenColour = wx.Colour(255, 208, 104)  # 笔颜色，这通常会用于描边
         self.UNBrushColour = [0, 0, 0]  # 用户刷子颜色,不使用wx.colour,因为精度不足,用于计算动画
         self.UNPenColour = [255, 208, 104]  # 用户笔颜色
@@ -59,7 +62,7 @@ class ToggleButtonN(wx.Control):
         self.SetForegroundColour(wx.Colour("white"))  # 字体颜色
         self.SetBackgroundColour(wx.Colour("black"))  # 背景颜色
 
-        self.SetLabel(label)
+        self.SetLabel(tips)
 
         # 事件绑定
         self.Bind(wx.EVT_PAINT, self.OnPaint)
@@ -90,35 +93,13 @@ class ToggleButtonN(wx.Control):
         label = self.GetLabel()  # 设置文本
         textWidth, textHeight = dc.GetTextExtent(label)  # 获取文本区大小
 
-        dc.SetBrush(wx.Brush(self.SNBrushColour))
         dc.SetPen(wx.Pen(self.SNPenColour))
-        dc.DrawRoundedRectangle(0, 0, width, height, 4)  # 绘制圆角
+        dc.SetBrush(wx.Brush(self.SNBrushColour))
+        dc.DrawRoundedRectangle(0, 0, width, height, 4)
 
-        if self.IS_Checked == True:
-            dc.SetBrush(wx.Brush(self.SNPenColour))
-            dc.SetPen(wx.Pen(self.SNPenColour))
-            dc.DrawRoundedRectangle(
-                round(width / 2 - (width - 40) / 2),
-                round(height - height / 6),
-                width - 40,
-                4,
-                2,
-            )  # 绘制下划线
-        else:
-            dc.SetBrush(wx.Brush(wx.Colour(35, 35, 35)))
-            dc.SetPen(wx.Pen(wx.Colour(35, 35, 35)))
-            dc.DrawRoundedRectangle(
-                round(width / 2 - (width - 40) / 2),
-                round(height - height / 6),
-                width - 40,
-                4,
-                2,
-            )  # 绘制下划线
-
-        # 计算以居中对齐
-        textXpos = width / 2 - textWidth / 2
-        textYpos = height / 2 - textHeight / 2
-        dc.DrawText(label, int(textXpos), int(textYpos))  # 绘制文字
+        self.SetForegroundColour(wx.Colour("white"))
+        dc.DrawText(self.GetLabel(),10,round(height / 2 - textHeight / 2))
+        dc.DrawRotatedText("\uE70D", 80, round(height / 2 - textHeight / 2), 0)
 
     def EraseBackground(self, event):
         pass
@@ -136,7 +117,7 @@ class ToggleButtonN(wx.Control):
             self.timer.Stop()
             self.timer.Start(int(1000 / self.FPS))
             # 发送事件
-            wx.PostEvent(self, button_cmd_event_push(id=self.GetId(), value=None))
+            wx.PostEvent(self, combobox_cmd_event_down(id=self.GetId(), value=None))
         else:
             self.UTBrushColour = [60, 60, 60]
             self.Last_time = 0.2
@@ -144,29 +125,31 @@ class ToggleButtonN(wx.Control):
             self.Tick_Frame = 0
             self.timer.Stop()
             self.timer.Start(int(1000 / self.FPS))
-            wx.PostEvent(self, button_cmd_event_up(id=self.GetId(), value=None))
+            wx.PostEvent(self, combobox_cmd_event_down(id=self.GetId(), value=None))
 
     def OnLeftUp(self, event):
         if self.IS_Checked == False:
             self.IS_Checked = True
             self.UTPenColour = self.ThemeColour
             self.UTBrushColour = [70, 70, 70]
+            self.TArrow_Angle = 180
             self.Last_time = 0.2
             self.IS_First_Tick = True
             self.Tick_Frame = 0
             self.timer.Stop()
             self.timer.Start(int(1000 / self.FPS))
-            wx.PostEvent(self, button_cmd_event_up(id=self.GetId(), value=None))
+            wx.PostEvent(self, combobox_cmd_event_up(id=self.GetId(), value=None))
         else:
             self.IS_Checked = False
             self.UTBrushColour = [45, 45, 45]
             self.UTPenColour = [230, 170, 94]
+            self.TArrow_Angle = 0
             self.Last_time = 0.2
             self.IS_First_Tick = True
             self.Tick_Frame = 0
             self.timer.Stop()
             self.timer.Start(int(1000 / self.FPS))
-            wx.PostEvent(self, button_cmd_event_up(id=self.GetId(), value=None))
+            wx.PostEvent(self, combobox_cmd_event_up(id=self.GetId(), value=None))
 
     def OnEnterWindow(self, event):
         self.SetCursor(wx.Cursor(6))
@@ -227,6 +210,8 @@ class ToggleButtonN(wx.Control):
             self.GPen = self.UNPenColour[1]
             self.BPen = self.UNPenColour[2]
 
+            ##self.BArrow_Angle = self.NArrow_Angle
+
             # 差值
             self.RBdistance = self.UTBrushColour[0] - self.RBrush
             self.GBdistance = self.UTBrushColour[1] - self.GBrush
@@ -235,6 +220,8 @@ class ToggleButtonN(wx.Control):
             self.RPdistance = self.UTPenColour[0] - self.RPen
             self.GPdistance = self.UTPenColour[1] - self.GPen
             self.BPdistance = self.UTPenColour[2] - self.BPen
+
+            ##self.DArrow_Angle = self.BArrow_Angle - self.TArrow_Angle
 
             # 动画总帧数
             self.AL_Frames = round(self.FPS * self.Last_time)
@@ -266,6 +253,8 @@ class ToggleButtonN(wx.Control):
                 int(self.UNPenColour[1]),
                 int(self.UNPenColour[2]),
             )
+
+            ##self.NArrow_Angle = self.BArrow_Angle + self.DArrow_Angle * sc
 
             self.Refresh()
         else:

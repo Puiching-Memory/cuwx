@@ -71,6 +71,15 @@ class Main ( wx.Frame ):
 		self.SwitchMA = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.Size( 200,40 ), 0 )
 		SizerSide.Add( self.SwitchMA, 0, wx.ALL, 5 )
 
+		CMBAChoices = []
+		self.CMBA = wx.ComboBox( self, wx.ID_ANY, u"Combo", wx.DefaultPosition, wx.Size( 100,25 ), CMBAChoices, 0 )
+		SizerSide.Add( self.CMBA, 0, wx.ALL, 5 )
+
+		m_choice1Choices = []
+		self.m_choice1 = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, m_choice1Choices, 0 )
+		self.m_choice1.SetSelection( 0 )
+		SizerSide.Add( self.m_choice1, 0, wx.ALL, 5 )
+
 
 		SizerMain.Add( SizerSide, 0, 0, 5 )
 

@@ -46,7 +46,6 @@ def Analyze(path):
             mid = "cuwx.ToggleSwitch.ToggleSwitchN"
 
             combin = head + mid + bot
-
             data_Dec[cun] = combin
 
         elif "wx.ToggleButton" in i and "=" in i:
@@ -55,7 +54,6 @@ def Analyze(path):
             mid = "cuwx.ToggleButton.ToggleButtonN"
 
             combin = head + mid + bot
-
             data_Dec[cun] = combin
 
         elif "wx.Button" in i and "=" in i:
@@ -64,7 +62,6 @@ def Analyze(path):
             mid = "cuwx.Button.ButtonN"
 
             combin = head + mid + bot
-            ##print(combin)
             data_Dec[cun] = combin
         elif "wx.CheckBox" in i and "=" in i:
             head = i[: i.find("=") + 2]
@@ -72,7 +69,14 @@ def Analyze(path):
             mid = "cuwx.CheckBox.CheckBoxN"
 
             combin = head + mid + bot
+            data_Dec[cun] = combin
 
+        elif "wx.ComboBox" in i and "=" in i:
+            head = i[: i.find("=") + 2]
+            bot = i[i.find("=") + 13 :]
+            mid = "cuwx.ComboBox.ComboBoxN"
+
+            combin = head + mid + bot
             data_Dec[cun] = combin
 
         cun = cun + 1

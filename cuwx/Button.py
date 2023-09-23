@@ -151,7 +151,7 @@ class ButtonN(wx.Control):
         # 动画,指数缓入
         if self.IS_First_Tick == True:
             self.IS_First_Tick = False
-            # 当前颜色值
+            # 起始值
             self.RBrush = self.UNBrushColour[0]
             self.GBrush = self.UNBrushColour[1]
             self.BBrush = self.UNBrushColour[2]
@@ -160,23 +160,14 @@ class ButtonN(wx.Control):
             self.GPen = self.UNPenColour[1]
             self.BPen = self.UNPenColour[2]
 
-            # 目标颜色值
-            RBrushTar = self.UTBrushColour[0]
-            GBrushTar = self.UTBrushColour[1]
-            BBrushTar = self.UTBrushColour[2]
+            # 差值
+            self.RBdistance = self.UTBrushColour[0] - self.RBrush
+            self.GBdistance = self.UTBrushColour[1] - self.GBrush
+            self.BBdistance = self.UTBrushColour[2] - self.BBrush
 
-            RPenTar = self.UTPenColour[0]
-            GPenTar = self.UTPenColour[1]
-            BPenTar = self.UTPenColour[2]
-
-            # 颜色差值
-            self.RBdistance = RBrushTar - self.RBrush
-            self.GBdistance = GBrushTar - self.GBrush
-            self.BBdistance = BBrushTar - self.BBrush
-
-            self.RPdistance = RPenTar - self.RPen
-            self.GPdistance = GPenTar - self.GPen
-            self.BPdistance = BPenTar - self.BPen
+            self.RPdistance = self.UTPenColour[0] - self.RPen
+            self.GPdistance = self.UTPenColour[1] - self.GPen
+            self.BPdistance = self.UTPenColour[2] - self.BPen
 
             # 动画总帧数
             self.AL_Frames = round(self.FPS * self.Last_time)

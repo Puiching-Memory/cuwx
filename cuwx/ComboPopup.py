@@ -1,6 +1,7 @@
 import wx
 import wx.lib.newevent
 import win32api
+from .RBS_windows_api import *
 from .Theme import get_windows_theme_color
 from .MathN import *
 
@@ -8,30 +9,32 @@ from .MathN import *
 button_cmd_event_push, EVT_BUTTON_PUSH = wx.lib.newevent.NewCommandEvent()  # 按下按钮事件
 button_cmd_event_up, EVT_BUTTON_UP = wx.lib.newevent.NewCommandEvent()  # 松开按钮事件
 
-# TODO:三阶贝塞尔动画
-# TODO:按钮内阴影
 
-
-class ToggleButtonN(wx.Control):
+class ComboPopupN(wx.PopupWindow):
     def __init__(
         self,
         parent,
         id=wx.ID_ANY,
-        label="",
         pos=wx.DefaultPosition,
         size=wx.DefaultSize,
         style=wx.NO_BORDER,
+        choise=[],
         *args,
         **kwargs
     ):
-        wx.Control.__init__(self, parent, id, pos, size, wx.NO_BORDER, *args, **kwargs)
+        wx.PopupWindow.__init__(self, parent)
 
         self.parent = parent
+
+        self.SetSize(100,100)
 
         # 获取屏幕设置信息
         settings = win32api.EnumDisplaySettings(
             win32api.EnumDisplayDevices().DeviceName, -1
         )
+        
+        a = WindowEffect()
+        a.setAeroEffect(self.GetHandle())
 
         self.IS_Checked = False  # 是否按下
 
@@ -59,7 +62,6 @@ class ToggleButtonN(wx.Control):
         self.SetForegroundColour(wx.Colour("white"))  # 字体颜色
         self.SetBackgroundColour(wx.Colour("black"))  # 背景颜色
 
-        self.SetLabel(label)
 
         # 事件绑定
         self.Bind(wx.EVT_PAINT, self.OnPaint)
@@ -90,35 +92,10 @@ class ToggleButtonN(wx.Control):
         label = self.GetLabel()  # 设置文本
         textWidth, textHeight = dc.GetTextExtent(label)  # 获取文本区大小
 
-        dc.SetBrush(wx.Brush(self.SNBrushColour))
-        dc.SetPen(wx.Pen(self.SNPenColour))
-        dc.DrawRoundedRectangle(0, 0, width, height, 4)  # 绘制圆角
 
-        if self.IS_Checked == True:
-            dc.SetBrush(wx.Brush(self.SNPenColour))
-            dc.SetPen(wx.Pen(self.SNPenColour))
-            dc.DrawRoundedRectangle(
-                round(width / 2 - (width - 40) / 2),
-                round(height - height / 6),
-                width - 40,
-                4,
-                2,
-            )  # 绘制下划线
-        else:
-            dc.SetBrush(wx.Brush(wx.Colour(35, 35, 35)))
-            dc.SetPen(wx.Pen(wx.Colour(35, 35, 35)))
-            dc.DrawRoundedRectangle(
-                round(width / 2 - (width - 40) / 2),
-                round(height - height / 6),
-                width - 40,
-                4,
-                2,
-            )  # 绘制下划线
-
-        # 计算以居中对齐
-        textXpos = width / 2 - textWidth / 2
-        textYpos = height / 2 - textHeight / 2
-        dc.DrawText(label, int(textXpos), int(textYpos))  # 绘制文字
+        dc.SetPen(wx.WHITE_PEN)
+        dc.SetBrush(wx.Brush(wx.Colour(0,0,0)))
+        dc.DrawRectangle(0,0,1000,1000)
 
     def EraseBackground(self, event):
         pass
@@ -214,11 +191,12 @@ class ToggleButtonN(wx.Control):
         self.SetBackgroundColour(wx.Colour("white"))
         self.SetForegroundColour(wx.Colour("black"))
 
+
     def tick(self, event):
         # 动画,指数缓入
         if self.IS_First_Tick == True:
             self.IS_First_Tick = False
-            # 起始值
+            # 当前颜色值
             self.RBrush = self.UNBrushColour[0]
             self.GBrush = self.UNBrushColour[1]
             self.BBrush = self.UNBrushColour[2]
@@ -227,14 +205,23 @@ class ToggleButtonN(wx.Control):
             self.GPen = self.UNPenColour[1]
             self.BPen = self.UNPenColour[2]
 
-            # 差值
-            self.RBdistance = self.UTBrushColour[0] - self.RBrush
-            self.GBdistance = self.UTBrushColour[1] - self.GBrush
-            self.BBdistance = self.UTBrushColour[2] - self.BBrush
+            # 目标颜色值
+            RBrushTar = self.UTBrushColour[0]
+            GBrushTar = self.UTBrushColour[1]
+            BBrushTar = self.UTBrushColour[2]
 
-            self.RPdistance = self.UTPenColour[0] - self.RPen
-            self.GPdistance = self.UTPenColour[1] - self.GPen
-            self.BPdistance = self.UTPenColour[2] - self.BPen
+            RPenTar = self.UTPenColour[0]
+            GPenTar = self.UTPenColour[1]
+            BPenTar = self.UTPenColour[2]
+
+            # 颜色差值
+            self.RBdistance = RBrushTar - self.RBrush
+            self.GBdistance = GBrushTar - self.GBrush
+            self.BBdistance = BBrushTar - self.BBrush
+
+            self.RPdistance = RPenTar - self.RPen
+            self.GPdistance = GPenTar - self.GPen
+            self.BPdistance = BPenTar - self.BPen
 
             # 动画总帧数
             self.AL_Frames = round(self.FPS * self.Last_time)
