@@ -173,9 +173,7 @@ class CalcFrame(Main, wx.Frame):
         print(2)
 
     def OnComD(self, event):
-        aa = cuwx.ComboPopupN(self,[])
-        aa.Show()
-        aa.SetPosition(wx.Point(500,550))
+        pass
 
     def MainOnMove(self, event):
         ##print(self.GetPosition())

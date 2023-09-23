@@ -48,7 +48,7 @@
             <property name="name">Main</property>
             <property name="pos"></property>
             <property name="size">800,500</property>
-            <property name="style">wxDEFAULT_FRAME_STYLE</property>
+            <property name="style">wxDEFAULT_FRAME_STYLE|wxFRAME_SHAPED</property>
             <property name="subclass">; ; forward_declare</property>
             <property name="title">Win32GUI</property>
             <property name="tooltip"></property>

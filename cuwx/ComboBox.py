@@ -1,6 +1,7 @@
 import wx
 import wx.lib.newevent
 import win32api
+from .ComboPopup import *
 from .Theme import get_windows_theme_color
 from .MathN import *
 
@@ -98,7 +99,7 @@ class ComboBoxN(wx.Control):
         dc.DrawRoundedRectangle(0, 0, width, height, 4)
 
         self.SetForegroundColour(wx.Colour("white"))
-        dc.DrawText(self.GetLabel(),10,round(height / 2 - textHeight / 2))
+        dc.DrawText(self.GetLabel(), 10, round(height / 2 - textHeight / 2))
         dc.DrawRotatedText("\uE70D", 80, round(height / 2 - textHeight / 2), 0)
 
     def EraseBackground(self, event):
@@ -116,6 +117,12 @@ class ComboBoxN(wx.Control):
             self.Tick_Frame = 0
             self.timer.Stop()
             self.timer.Start(int(1000 / self.FPS))
+
+            # 显示下拉列表
+            aa = ComboPopupN(parent=self,choise=[],size=wx.Size(100,200))
+            aa.SetPosition(wx.Point(self.GetScreenPosition()[0],self.GetScreenPosition()[1] + self.GetSize()[1] + 5))
+            aa.Show()
+            print(aa.GetPosition())
             # 发送事件
             wx.PostEvent(self, combobox_cmd_event_down(id=self.GetId(), value=None))
         else:
