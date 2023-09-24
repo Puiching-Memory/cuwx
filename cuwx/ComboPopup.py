@@ -11,7 +11,7 @@ button_cmd_event_push, EVT_BUTTON_PUSH = wx.lib.newevent.NewCommandEvent()  # �
 button_cmd_event_up, EVT_BUTTON_UP = wx.lib.newevent.NewCommandEvent()  # 松开按钮事件
 
 
-class ComboPopupN(wx.PopupWindow):
+class ComboPopupN(wx.PopupTransientWindow):
 	def __init__(
 		self,
 		parent,
@@ -23,9 +23,9 @@ class ComboPopupN(wx.PopupWindow):
 		*args,
 		**kwargs
 	):
-		wx.PopupWindow.__init__(self, parent, style)
+		wx.PopupTransientWindow.__init__(self, parent, style)
 
-		self.parent = parent
+		self.parent:wx.Control = parent
 
 		# 获取屏幕设置信息
 		settings = win32api.EnumDisplaySettings(
@@ -34,8 +34,8 @@ class ComboPopupN(wx.PopupWindow):
 
 		# 启用毛玻璃窗口效果
 		WindowEffect().setAeroEffect(self.GetHandle())
-		
 
+		self.size = size
 		self.TYSize = size.GetHeight()  # 目标窗口Y轴大小,px
 		self.BYSize = 0  # 初始窗口Y轴大小,px
 		self.BXSize = size.GetWidth()  # 初始窗口X轴大小
@@ -74,7 +74,8 @@ class ComboPopupN(wx.PopupWindow):
 		self.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
 		self.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
 		self.Bind(wx.EVT_SIZE, self.OnSize)
-		self.Bind(wx.EVT_SHOW, self.OnShow)
+		##self.Bind(wx.EVT_SHOW, self.OnShow)
+		self.Bind(wx.EVT_KILL_FOCUS, self.Onkill)
 
 		self.Bind(wx.EVT_TIMER, self.tick, id=wx.ID_ANY)  # 计时器事件
 
@@ -106,32 +107,43 @@ class ComboPopupN(wx.PopupWindow):
 		return
 		event.Skip()
 
-	def OnShow(self, event):
-		self.Last_time = 0.4
+	def Onkill(self, event):
+		print(1234)
+
+	def Dismiss(self,*event):
+		self.OnHide()
+
+	def OnShow(self, *event):
+		self.TYSize = self.size.GetHeight()  # 目标窗口Y轴大小,px
+		self.BYSize = 0  # 初始窗口Y轴大小,px
+		self.BXSize = self.size.GetWidth()  # 初始窗口X轴大小
+		self.Last_time = 0.2
 		self.IS_First_Tick = True
 		self.Tick_Frame = 0
 		self.timer.Stop()
 		self.timer.Start(int(1000 / self.FPS))
-		# event.Skip()
+
+	def OnHide(self, *event):
+		self.TYSize = 0  # 目标窗口Y轴大小,px
+		self.BYSize = self.size.GetHeight()  # 初始窗口Y轴大小,px
+		self.BXSize = self.size.GetWidth()  # 初始窗口X轴大小
+		self.Last_time = 0.2
+		self.IS_First_Tick = True
+		self.Tick_Frame = 0
+		self.timer.Stop()
+		self.timer.Start(int(1000 / self.FPS))
+		##self.Shown = False
+		self.parent.IS_Checked = False
 
 	def OnLeftDown(self, event):
-		if self.IS_Checked == False:
-			self.UTBrushColour = [40, 40, 40]
-			self.Last_time = 0.2
-			self.IS_First_Tick = True
-			self.Tick_Frame = 0
-			self.timer.Stop()
-			self.timer.Start(int(1000 / self.FPS))
-			# 发送事件
-			wx.PostEvent(self, button_cmd_event_push(id=self.GetId(), value=None))
-		else:
-			self.UTBrushColour = [60, 60, 60]
-			self.Last_time = 0.2
-			self.IS_First_Tick = True
-			self.Tick_Frame = 0
-			self.timer.Stop()
-			self.timer.Start(int(1000 / self.FPS))
-			wx.PostEvent(self, button_cmd_event_up(id=self.GetId(), value=None))
+		self.UTBrushColour = [40, 40, 40]
+		self.Last_time = 0.2
+		self.IS_First_Tick = True
+		self.Tick_Frame = 0
+		self.timer.Stop()
+		self.timer.Start(int(1000 / self.FPS))
+		# 发送事件
+		wx.PostEvent(self, button_cmd_event_push(id=self.GetId(), value=None))
 
 	def OnLeftUp(self, event):
 		if self.IS_Checked == False:
@@ -157,41 +169,25 @@ class ComboPopupN(wx.PopupWindow):
 
 	def OnEnterWindow(self, event):
 		self.SetCursor(wx.Cursor(6))
-		if self.IS_Checked == True:
-			self.UTBrushColour = [80, 80, 80]
-			self.UTPenColour = self.ThemeColour
-			self.Last_time = 0.2
-			self.IS_First_Tick = True
-			self.Tick_Frame = 0
-			self.timer.Stop()
-			self.timer.Start(int(1000 / self.FPS))
-		else:
-			self.UTBrushColour = [45, 45, 45]
-			self.UTPenColour = [230, 170, 94]
-			self.Last_time = 0.2
-			self.IS_First_Tick = True
-			self.Tick_Frame = 0
-			self.timer.Stop()
-			self.timer.Start(int(1000 / self.FPS))
+		self.UTBrushColour = [80, 80, 80]
+		self.UTPenColour = self.ThemeColour
+		self.Last_time = 0.2
+		self.IS_First_Tick = True
+		self.Tick_Frame = 0
+		self.timer.Stop()
+		self.timer.Start(int(1000 / self.FPS))
+
 
 	def OnLeaveWindow(self, event):
 		self.SetCursor(wx.Cursor(1))
-		if self.IS_Checked == True:
-			self.UTBrushColour = [70, 70, 70]
-			self.UTPenColour = self.ThemeColour
-			self.Last_time = 0.2
-			self.IS_First_Tick = True
-			self.Tick_Frame = 0
-			self.timer.Stop()
-			self.timer.Start(int(1000 / self.FPS))
-		else:
-			self.UTBrushColour = [0, 0, 0]
-			self.UTPenColour = [255, 208, 104]
-			self.Last_time = 0.2
-			self.IS_First_Tick = True
-			self.Tick_Frame = 0
-			self.timer.Stop()
-			self.timer.Start(int(1000 / self.FPS))
+		self.UTBrushColour = [70, 70, 70]
+		self.UTPenColour = self.ThemeColour
+		self.Last_time = 0.2
+		self.IS_First_Tick = True
+		self.Tick_Frame = 0
+		self.timer.Stop()
+		self.timer.Start(int(1000 / self.FPS))
+
 
 	def Set2Dark(self):
 		self.SetBackgroundColour(wx.Colour("black"))
@@ -255,7 +251,6 @@ class ComboPopupN(wx.PopupWindow):
 				int(self.UNPenColour[1]),
 				int(self.UNPenColour[2]),
 			)
-
 
 			"""
 			path: wx.GraphicsPath = (

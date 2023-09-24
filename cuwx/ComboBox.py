@@ -45,6 +45,8 @@ class ComboBoxN(wx.Control):
         self.Last_time = 0.2  # 动画持续时间
         self.AL_Frames = 0  # 总帧数
 
+        self.Popupwindow = ComboPopupN(parent=self, choise=[], size=wx.Size(self.GetSize()[0], 200))
+
         # 动画计时器
         self.timer = wx.Timer()
         self.timer.SetOwner(self, wx.ID_ANY)
@@ -75,6 +77,8 @@ class ComboBoxN(wx.Control):
         self.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
         self.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
         self.Bind(wx.EVT_SIZE, self.OnSize)
+        self.Bind(wx.EVT_KILL_FOCUS, self.OnLeftUp)
+        self.Bind(wx.EVT_MOVE, self.OnMove)
 
         self.Bind(wx.EVT_TIMER, self.tick, id=wx.ID_ANY)  # 计时器事件
 
@@ -109,6 +113,9 @@ class ComboBoxN(wx.Control):
     def OnSize(self, event):
         event.Skip()
 
+    def OnMove(self, event):
+        event.Skip()
+
     def OnLeftDown(self, event):
         if self.IS_Checked == False:
             self.UTBrushColour = [40, 40, 40]
@@ -118,11 +125,6 @@ class ComboBoxN(wx.Control):
             self.timer.Stop()
             self.timer.Start(int(1000 / self.FPS))
 
-            # 显示下拉列表
-            aa = ComboPopupN(parent=self,choise=[],size=wx.Size(100,200))
-            aa.SetPosition(wx.Point(self.GetScreenPosition()[0],self.GetScreenPosition()[1] + self.GetSize()[1] + 5))
-            aa.Show()
-            print(aa.GetPosition())
             # 发送事件
             wx.PostEvent(self, combobox_cmd_event_down(id=self.GetId(), value=None))
         else:
@@ -132,6 +134,7 @@ class ComboBoxN(wx.Control):
             self.Tick_Frame = 0
             self.timer.Stop()
             self.timer.Start(int(1000 / self.FPS))
+
             wx.PostEvent(self, combobox_cmd_event_down(id=self.GetId(), value=None))
 
     def OnLeftUp(self, event):
@@ -145,6 +148,17 @@ class ComboBoxN(wx.Control):
             self.Tick_Frame = 0
             self.timer.Stop()
             self.timer.Start(int(1000 / self.FPS))
+
+            # 显示下拉列表
+            self.Popupwindow.SetPosition(
+                wx.Point(
+                    self.GetScreenPosition()[0],
+                    self.GetScreenPosition()[1] + self.GetSize()[1] + 5,
+                )
+            )
+            self.Popupwindow.Show()
+            self.Popupwindow.OnShow()
+            self.Popupwindow.SetFocus()
             wx.PostEvent(self, combobox_cmd_event_up(id=self.GetId(), value=None))
         else:
             self.IS_Checked = False
@@ -156,6 +170,8 @@ class ComboBoxN(wx.Control):
             self.Tick_Frame = 0
             self.timer.Stop()
             self.timer.Start(int(1000 / self.FPS))
+
+            self.Popupwindow.OnHide()
             wx.PostEvent(self, combobox_cmd_event_up(id=self.GetId(), value=None))
 
     def OnEnterWindow(self, event):
